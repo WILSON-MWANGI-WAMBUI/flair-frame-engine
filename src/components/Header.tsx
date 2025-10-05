@@ -13,16 +13,16 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="font-display text-2xl font-bold tracking-tight">
-            LuxeWear
+            ICON THRIFT
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <Link to="/women" className="text-sm font-medium hover:text-accent transition-colors">
-              Women
+              Clothing
             </Link>
             <Link to="/men" className="text-sm font-medium hover:text-accent transition-colors">
-              Men
+              Footwear
             </Link>
             <Link to="/new" className="text-sm font-medium hover:text-accent transition-colors">
               New Arrivals
@@ -69,14 +69,14 @@ const Header = () => {
               className="block text-sm font-medium hover:text-accent transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Women
+              Clothing
             </Link>
             <Link
               to="/men"
               className="block text-sm font-medium hover:text-accent transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Men
+              Footwear
             </Link>
             <Link
               to="/new"
