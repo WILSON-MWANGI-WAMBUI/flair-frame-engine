@@ -6,19 +6,23 @@ import { Button } from "@/components/ui/button";
 import { SlidersHorizontal } from "lucide-react";
 
 const CategoryPage = () => {
-  const { gender } = useParams<{ gender: "men" | "women" }>();
+  const { gender } = useParams<{ gender?: "men" | "women" | "all" }>();
   const [searchParams] = useSearchParams();
   const categoryFilter = searchParams.get("category");
   
   const [selectedCategory, setSelectedCategory] = useState<string>(categoryFilter || "all");
 
   const filteredProducts = products.filter((product) => {
-    const matchesGender = product.gender === gender;
+    const matchesGender = !gender || gender === "all" || product.gender === gender || product.gender === "unisex";
     const matchesCategory = selectedCategory === "all" || product.category.toLowerCase() === selectedCategory;
     return matchesGender && matchesCategory;
   });
 
-  const categories = ["all", "clothing", "shoes", "slippers"];
+  const categories = ["all", "clothing", "shoes", "slippers", "accessories"];
+  
+  const pageTitle = gender && gender !== "all" 
+    ? `${gender.charAt(0).toUpperCase() + gender.slice(1)}'s Collection`
+    : "All Products";
 
   return (
     <div className="min-h-screen">
@@ -26,11 +30,11 @@ const CategoryPage = () => {
       <section className="relative h-64 flex items-center justify-center overflow-hidden bg-muted">
         <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-luxury/20" />
         <div className="container mx-auto px-4 relative z-10">
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-center capitalize">
-            {gender}'s Collection
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-center">
+            {pageTitle}
           </h1>
           <p className="text-center text-muted-foreground mt-4">
-            Discover our curated selection of premium fashion
+            Discover our curated selection of sustainable thrifted fashion
           </p>
         </div>
       </section>

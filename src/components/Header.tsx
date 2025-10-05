@@ -18,11 +18,14 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link to="/women" className="text-sm font-medium hover:text-accent transition-colors">
+            <Link to="/all?category=clothing" className="text-sm font-medium hover:text-accent transition-colors">
               Clothing
             </Link>
-            <Link to="/men" className="text-sm font-medium hover:text-accent transition-colors">
+            <Link to="/all?category=shoes" className="text-sm font-medium hover:text-accent transition-colors">
               Footwear
+            </Link>
+            <Link to="/all?category=accessories" className="text-sm font-medium hover:text-accent transition-colors">
+              Accessories
             </Link>
             <Link to="/new" className="text-sm font-medium hover:text-accent transition-colors">
               New Arrivals
@@ -65,18 +68,25 @@ const Header = () => {
         {mobileMenuOpen && (
           <nav className="md:hidden py-4 space-y-4 border-t animate-fade-in">
             <Link
-              to="/women"
+              to="/all?category=clothing"
               className="block text-sm font-medium hover:text-accent transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               Clothing
             </Link>
             <Link
-              to="/men"
+              to="/all?category=shoes"
               className="block text-sm font-medium hover:text-accent transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               Footwear
+            </Link>
+            <Link
+              to="/all?category=accessories"
+              className="block text-sm font-medium hover:text-accent transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Accessories
             </Link>
             <Link
               to="/new"

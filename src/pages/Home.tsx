@@ -7,6 +7,7 @@ import heroBanner from "@/assets/hero-banner.jpg";
 import categoryClothing from "@/assets/category-clothing.jpg";
 import categoryShoes from "@/assets/category-shoes.jpg";
 import categorySlippers from "@/assets/category-slippers.jpg";
+import categoryAccessories from "@/assets/category-accessories.jpg";
 
 const Home = () => {
   const featuredProducts = products.filter((p) => p.featured);
@@ -31,15 +32,21 @@ const Home = () => {
             Discover curated thrifted fashion and footwear. Quality pieces that tell a story, priced to make sustainable fashion accessible to everyone.
           </p>
           <div className="flex flex-wrap gap-4 justify-center animate-fade-in">
-            <Link to="/women">
-              <Button size="lg" className="gradient-luxury text-luxury-foreground hover:shadow-luxury transition-smooth">
+            <Link to="/all?category=clothing">
+              <Button size="lg" variant="luxury">
                 Shop Clothing
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <Link to="/men">
-              <Button size="lg" variant="outline" className="hover-scale bg-white/10 text-white border-white/30 hover:bg-white/20">
+            <Link to="/all?category=shoes">
+              <Button size="lg" variant="premium">
                 Shop Footwear
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to="/all?category=accessories">
+              <Button size="lg" variant="outline" className="hover-scale bg-white/10 text-white border-white/30 hover:bg-white/20">
+                Shop Accessories
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -50,48 +57,63 @@ const Home = () => {
       {/* Categories Section */}
       <section className="container mx-auto px-4 py-16">
         <h2 className="font-display text-3xl md:text-4xl font-bold text-center mb-12">Shop by Category</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link to="/women?category=clothing" className="group">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Link to="/all?category=clothing" className="group">
             <div className="relative aspect-[4/5] overflow-hidden rounded-xl shadow-card hover-lift">
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
               <img
                 src={categoryClothing}
-                alt="Clothing"
+                alt="Clothing Collection"
                 className="h-full w-full object-cover transition-smooth group-hover:scale-110"
               />
               <div className="absolute bottom-6 left-6 z-20 text-white">
                 <h3 className="font-display text-2xl font-bold mb-2">Clothing</h3>
-                <p className="text-sm opacity-90">Discover the latest trends</p>
+                <p className="text-sm opacity-90">Curated fashion pieces</p>
               </div>
             </div>
           </Link>
           
-          <Link to="/women?category=shoes" className="group">
+          <Link to="/all?category=shoes" className="group">
             <div className="relative aspect-[4/5] overflow-hidden rounded-xl shadow-card hover-lift">
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
               <img
                 src={categoryShoes}
-                alt="Shoes"
+                alt="Footwear Collection"
                 className="h-full w-full object-cover transition-smooth group-hover:scale-110"
               />
               <div className="absolute bottom-6 left-6 z-20 text-white">
-                <h3 className="font-display text-2xl font-bold mb-2">Shoes</h3>
+                <h3 className="font-display text-2xl font-bold mb-2">Footwear</h3>
                 <p className="text-sm opacity-90">Step into style</p>
               </div>
             </div>
           </Link>
           
-          <Link to="/women?category=slippers" className="group">
+          <Link to="/all?category=slippers" className="group">
             <div className="relative aspect-[4/5] overflow-hidden rounded-xl shadow-card hover-lift">
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
               <img
                 src={categorySlippers}
-                alt="Slippers"
+                alt="Slippers Collection"
                 className="h-full w-full object-cover transition-smooth group-hover:scale-110"
               />
               <div className="absolute bottom-6 left-6 z-20 text-white">
                 <h3 className="font-display text-2xl font-bold mb-2">Slippers</h3>
                 <p className="text-sm opacity-90">Comfort meets luxury</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link to="/all?category=accessories" className="group">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-xl shadow-card hover-lift">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
+              <img
+                src={categoryAccessories}
+                alt="Accessories Collection"
+                className="h-full w-full object-cover transition-smooth group-hover:scale-110"
+              />
+              <div className="absolute bottom-6 left-6 z-20 text-white">
+                <h3 className="font-display text-2xl font-bold mb-2">Accessories</h3>
+                <p className="text-sm opacity-90">Complete your look</p>
               </div>
             </div>
           </Link>
@@ -155,8 +177,8 @@ const Home = () => {
             <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
               Every purchase makes a difference. Shop quality pre-loved fashion and help reduce textile waste.
             </p>
-            <Link to="/women">
-              <Button size="lg" className="bg-white text-primary hover:bg-white/90 transition-smooth">
+            <Link to="/all">
+              <Button size="lg" className="bg-white text-primary hover:bg-white/90 transition-smooth hover-scale">
                 Start Shopping
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
