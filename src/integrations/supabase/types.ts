@@ -14,13 +14,183 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cart_items: {
+        Row: {
+          color: string
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          product_id: string | null
+          quantity: number
+          size: string
+          user_id: string | null
+        }
+        Insert: {
+          color: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          product_id?: string | null
+          quantity?: number
+          size: string
+          user_id?: string | null
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          product_id?: string | null
+          quantity?: number
+          size?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          items: Json
+          status: string | null
+          total_cents: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          items: Json
+          status?: string | null
+          total_cents: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          items?: Json
+          status?: string | null
+          total_cents?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string | null
+          colors: string[] | null
+          created_at: string | null
+          currency: string | null
+          description: string | null
+          featured: boolean | null
+          gender: string | null
+          id: string
+          images: Json | null
+          price_cents: number
+          reservation_time_seconds: number | null
+          reserved: number
+          sizes: string[] | null
+          slug: string
+          stock: number
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          colors?: string[] | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          featured?: boolean | null
+          gender?: string | null
+          id?: string
+          images?: Json | null
+          price_cents: number
+          reservation_time_seconds?: number | null
+          reserved?: number
+          sizes?: string[] | null
+          slug: string
+          stock?: number
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          colors?: string[] | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          featured?: boolean | null
+          gender?: string | null
+          id?: string
+          images?: Json | null
+          price_cents?: number
+          reservation_time_seconds?: number | null
+          reserved?: number
+          sizes?: string[] | null
+          slug?: string
+          stock?: number
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          theme_preference: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          theme_preference?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          theme_preference?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      clean_expired_cart_items: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      expire_orders: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

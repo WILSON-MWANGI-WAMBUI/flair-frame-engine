@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { ShoppingBag, Search, Menu, X, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ShoppingBag, Search, Menu, X, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { totalItems } = useCart();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -40,9 +43,15 @@ const Header = () => {
             <Button variant="ghost" size="icon" className="hidden md:flex">
               <Search className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-            </Button>
+            {user ? (
+              <Button variant="ghost" size="icon" onClick={signOut} title="Sign out">
+                <LogOut className="h-5 w-5" />
+              </Button>
+            ) : (
+              <Button variant="ghost" size="icon" onClick={() => navigate("/auth")} title="Sign in">
+                <User className="h-5 w-5" />
+              </Button>
+            )}
             <Link to="/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingBag className="h-5 w-5" />
