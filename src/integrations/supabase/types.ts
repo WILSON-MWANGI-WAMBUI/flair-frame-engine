@@ -183,14 +183,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      clean_expired_cart_items: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      expire_orders: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      clean_expired_cart_items: { Args: never; Returns: undefined }
+      expire_orders: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
