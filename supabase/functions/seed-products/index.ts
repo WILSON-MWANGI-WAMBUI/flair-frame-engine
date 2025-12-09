@@ -1,5 +1,10 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
 const products = [
   {
     title: "Classic Leather Jacket",
@@ -82,35 +87,102 @@ const products = [
 ];
 
 Deno.serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     
+    // Get the authorization header from the request
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      console.error('No authorization header provided');
+      return new Response(
+        JSON.stringify({ error: 'Authorization required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Create a client with the user's JWT to check their role
+    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        headers: { Authorization: authHeader }
+      }
+    });
+
+    // Get the authenticated user
+    const { data: { user }, error: userError } = await userClient.auth.getUser();
+    if (userError || !user) {
+      console.error('Failed to get user:', userError?.message);
+      return new Response(
+        JSON.stringify({ error: 'Invalid authentication' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('Authenticated user:', user.id);
+
+    // Check if the user has admin role using the has_role function
+    const { data: isAdmin, error: roleError } = await userClient.rpc('has_role', {
+      _user_id: user.id,
+      _role: 'admin'
+    });
+
+    if (roleError) {
+      console.error('Failed to check admin role:', roleError.message);
+      return new Response(
+        JSON.stringify({ error: 'Failed to verify permissions' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!isAdmin) {
+      console.error('User is not an admin:', user.id);
+      return new Response(
+        JSON.stringify({ error: 'Admin access required' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('Admin access verified for user:', user.id);
+
+    // Use service role client for database operations (bypasses RLS)
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Check if products already exist
     const { data: existing } = await supabase.from('products').select('id').limit(1);
     
     if (existing && existing.length > 0) {
+      console.log('Products already seeded');
       return new Response(
         JSON.stringify({ message: 'Products already seeded' }),
-        { headers: { 'Content-Type': 'application/json' } }
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     // Insert products
     const { data, error } = await supabase.from('products').insert(products).select();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Failed to insert products:', error.message);
+      throw error;
+    }
+
+    console.log('Products seeded successfully:', data.length);
 
     return new Response(
       JSON.stringify({ message: 'Products seeded successfully', count: data.length }),
-      { headers: { 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
+    console.error('Error in seed-products function:', error);
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });
