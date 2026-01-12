@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingBag, Search, Menu, X, User, LogOut } from "lucide-react";
+import { ShoppingBag, Search, Menu, X, User, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAdminRole } from "@/hooks/useAdminRole";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { totalItems } = useCart();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useAdminRole();
   const navigate = useNavigate();
 
   return (
@@ -43,6 +45,11 @@ const Header = () => {
             <Button variant="ghost" size="icon" className="hidden md:flex">
               <Search className="h-5 w-5" />
             </Button>
+            {isAdmin && (
+              <Button variant="ghost" size="icon" onClick={() => navigate("/admin")} title="Admin Dashboard">
+                <Shield className="h-5 w-5 text-accent" />
+              </Button>
+            )}
             {user ? (
               <Button variant="ghost" size="icon" onClick={signOut} title="Sign out">
                 <LogOut className="h-5 w-5" />
