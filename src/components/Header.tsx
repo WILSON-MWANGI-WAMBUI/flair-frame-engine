@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingBag, Search, Menu, X, User, LogOut, Shield } from "lucide-react";
+import { ShoppingBag, Search, Menu, X, User, LogOut, Shield, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -51,9 +51,14 @@ const Header = () => {
               </Button>
             )}
             {user ? (
-              <Button variant="ghost" size="icon" onClick={signOut} title="Sign out">
-                <LogOut className="h-5 w-5" />
-              </Button>
+              <>
+                <Button variant="ghost" size="icon" onClick={() => navigate("/orders")} title="My Orders">
+                  <Package className="h-5 w-5" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={signOut} title="Sign out">
+                  <LogOut className="h-5 w-5" />
+                </Button>
+              </>
             ) : (
               <Button variant="ghost" size="icon" onClick={() => navigate("/auth")} title="Sign in">
                 <User className="h-5 w-5" />

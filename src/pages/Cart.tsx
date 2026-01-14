@@ -104,12 +104,14 @@ const Cart = () => {
               </div>
             </div>
 
-            <Button
-              size="lg"
-              className="w-full gradient-luxury text-luxury-foreground hover:shadow-luxury transition-smooth"
-            >
-              Proceed to Checkout
-            </Button>
+            <Link to="/checkout">
+              <Button
+                size="lg"
+                className="w-full gradient-luxury text-luxury-foreground hover:shadow-luxury transition-smooth"
+              >
+                Proceed to Checkout
+              </Button>
+            </Link>
           </Card>
         </div>
       </div>

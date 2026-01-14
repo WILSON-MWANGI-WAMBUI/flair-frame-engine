@@ -2,3 +2,6 @@ project_id = "kkmzpigqlzlwebodjuhn"
 
 [functions.seed-products]
 verify_jwt = true
+
+[functions.create-order]
+verify_jwt = false
