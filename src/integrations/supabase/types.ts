@@ -61,6 +61,8 @@ export type Database = {
           expires_at: string | null
           id: string
           items: Json
+          payment_method: string | null
+          shipping_info: Json | null
           status: string | null
           total_cents: number
           updated_at: string | null
@@ -71,6 +73,8 @@ export type Database = {
           expires_at?: string | null
           id?: string
           items: Json
+          payment_method?: string | null
+          shipping_info?: Json | null
           status?: string | null
           total_cents: number
           updated_at?: string | null
@@ -81,6 +85,8 @@ export type Database = {
           expires_at?: string | null
           id?: string
           items?: Json
+          payment_method?: string | null
+          shipping_info?: Json | null
           status?: string | null
           total_cents?: number
           updated_at?: string | null
