@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,24 +21,13 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, signIn, signUp } = useAuth();
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate("/");
-      }
-    };
-    checkUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        navigate("/");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,37 +41,19 @@ const Auth = () => {
       });
 
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email: validatedData.email,
-          password: validatedData.password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-            data: {
-              full_name: validatedData.fullName,
-            },
-          },
-        });
-
-        if (error) throw error;
-
+        await signUp(validatedData.email, validatedData.password, validatedData.fullName || "");
         toast({
           title: "Account created!",
-          description: "You can now sign in to your account.",
+          description: "Welcome to ICON THRIFT!",
         });
-        setIsSignUp(false);
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: validatedData.email,
-          password: validatedData.password,
-        });
-
-        if (error) throw error;
-
+        await signIn(validatedData.email, validatedData.password);
         toast({
           title: "Welcome back!",
           description: "You've successfully signed in.",
         });
       }
+      navigate("/");
     } catch (error: any) {
       if (error instanceof z.ZodError) {
         toast({

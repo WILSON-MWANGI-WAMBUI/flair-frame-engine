@@ -1,63 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOrders } from "@/hooks/useOrders";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Package, ShoppingBag } from "lucide-react";
 import { format } from "date-fns";
 
-interface OrderItem {
-  product_id: string;
-  name: string;
-  price: number;
-  size: string;
-  color: string;
-  quantity: number;
-  image: string;
-}
-
-interface Order {
-  id: string;
-  items: OrderItem[];
-  total_cents: number;
-  status: string;
-  created_at: string;
-}
-
 const Orders = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { orders, loading } = useOrders();
 
   useEffect(() => {
     if (!user) {
       navigate("/auth");
-      return;
     }
-
-    const fetchOrders = async () => {
-      const { data, error } = await supabase
-        .from("orders")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching orders:", error);
-      } else {
-        // Parse items from JSONB
-        const parsedOrders = (data || []).map((order) => ({
-          ...order,
-          items: order.items as unknown as OrderItem[],
-        }));
-        setOrders(parsedOrders);
-      }
-      setLoading(false);
-    };
-
-    fetchOrders();
   }, [user, navigate]);
 
   const getStatusBadge = (status: string) => {
