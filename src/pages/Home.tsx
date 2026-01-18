@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/ProductCard";
+import RecentlyViewed from "@/components/RecentlyViewed";
 import { products } from "@/data/products";
 import { ArrowRight } from "lucide-react";
 import heroBanner from "@/assets/hero-banner.jpg";
@@ -155,6 +156,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Recently Viewed */}
+      <RecentlyViewed />
 
       {/* Featured Products */}
       <section className="container mx-auto px-4 py-16">

@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { products } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
+import RecentlyViewed from "@/components/RecentlyViewed";
 import { ShoppingBag } from "lucide-react";
 
 const ProductDetail = () => {
@@ -11,10 +13,17 @@ const ProductDetail = () => {
   const product = products.find((p) => p.id === id);
   const { addItem } = useCart();
   const { toast } = useToast();
+  const { addToRecentlyViewed } = useRecentlyViewed();
 
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState(0);
+
+  useEffect(() => {
+    if (id) {
+      addToRecentlyViewed(id);
+    }
+  }, [id, addToRecentlyViewed]);
 
   if (!product) {
     return (
@@ -144,6 +153,9 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Recently Viewed Section */}
+      <RecentlyViewed excludeProductId={id} />
     </div>
   );
 };
