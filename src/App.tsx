@@ -14,6 +14,7 @@ import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Orders from "./pages/Orders";
 import Auth from "./pages/Auth";
+import Search from "./pages/Search";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/search" element={<Search />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
