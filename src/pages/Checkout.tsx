@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { saveOrder, Order } from "@/hooks/useOrders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -136,40 +136,39 @@ const Checkout = () => {
     if (!validatePayment()) return;
 
     setLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("create-order", {
-        body: {
-          items: items.map((item) => ({
-            product_id: item.id,
-            name: item.name,
-            price: item.price,
-            size: item.size,
-            color: item.color,
-            quantity: item.quantity,
-            image: item.image,
-          })),
-          shipping,
-          payment,
-          total_cents: Math.round(totalPrice * 100),
-        },
-      });
+    
+    // Simulate payment processing
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
-      if (error) throw error;
+    const cardNumber = payment.card_number.replace(/\s/g, "");
+    
+    // Create order
+    const order: Order = {
+      id: crypto.randomUUID(),
+      items: items.map((item) => ({
+        product_id: item.id,
+        name: item.name,
+        price: item.price,
+        size: item.size,
+        color: item.color,
+        quantity: item.quantity,
+        image: item.image,
+      })),
+      total_cents: Math.round(totalPrice * 100),
+      status: "COMPLETED",
+      created_at: new Date().toISOString(),
+      shipping_info: shipping,
+      payment_method: `**** **** **** ${cardNumber.slice(-4)}`,
+    };
 
-      if (data.error) {
-        toast.error(data.error);
-        return;
-      }
+    // Save order to localStorage
+    saveOrder(order);
 
-      clearCart();
-      toast.success("Order placed successfully!");
-      navigate(`/order-confirmation/${data.order_id}`);
-    } catch (error) {
-      console.error("Checkout error:", error);
-      toast.error("Failed to process order. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    clearCart();
+    toast.success("Order placed successfully!");
+    navigate(`/order-confirmation/${order.id}`);
+    
+    setLoading(false);
   };
 
   return (

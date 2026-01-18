@@ -1,80 +1,14 @@
-import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useOrder } from "@/hooks/useOrders";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { CheckCircle2, Package, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 
-interface OrderItem {
-  product_id: string;
-  name: string;
-  price: number;
-  size: string;
-  color: string;
-  quantity: number;
-  image: string;
-}
-
-interface Order {
-  id: string;
-  items: OrderItem[];
-  total_cents: number;
-  status: string;
-  created_at: string;
-  shipping_info?: {
-    full_name: string;
-    email: string;
-    address: string;
-    city: string;
-    state: string;
-    zip_code: string;
-    country: string;
-  };
-  payment_method?: string;
-}
-
 const OrderConfirmation = () => {
   const { orderId } = useParams<{ orderId: string }>();
-  const [order, setOrder] = useState<Order | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchOrder = async () => {
-      if (!orderId) return;
-
-      const { data, error } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("id", orderId)
-        .single();
-
-      if (error) {
-        console.error("Error fetching order:", error);
-      } else {
-        // Parse items from JSONB
-        const orderData = data as unknown as {
-          id: string;
-          items: unknown;
-          total_cents: number;
-          status: string;
-          created_at: string;
-          shipping_info?: unknown;
-          payment_method?: string;
-        };
-        
-        setOrder({
-          ...orderData,
-          items: orderData.items as OrderItem[],
-          shipping_info: orderData.shipping_info as Order["shipping_info"],
-        });
-      }
-      setLoading(false);
-    };
-
-    fetchOrder();
-  }, [orderId]);
+  const { order, loading } = useOrder(orderId || "");
 
   if (loading) {
     return (
